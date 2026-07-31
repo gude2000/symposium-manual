@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0E0B08">
+<meta name="description" content="How an evening at the table works, what the controls do, and the rules the philosophers cannot break.">
+<title>Symposium — the manual</title>
+<style>
+  /* A standalone file has no reset applied for it. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  img, svg { max-width: 100%; }
+</style>
+
+
+<style>
+  /* ── Tokens ────────────────────────────────────────────────────────────
+     Taken from the app's own Candlelight.swift rather than invented, so the
+     manual is lit the same way the room is. The light theme is not an
+     inversion: it is the same manual printed on parchment. */
+  :root {
+    --night:      #0E0B08;
+    --ember:      #21180F;
+    --ember-soft: #191108;
+    --flame:      #F2BF73;
+    --flame-deep: #D69242;
+    --parchment:  #EFE3D0;
+    --ash:        #7E7160;
+
+    --ground:   var(--night);
+    --surface:  var(--ember);
+    --raised:   var(--ember-soft);
+    --ink:      var(--parchment);
+    --muted:    #A08E76;
+    --faint:    var(--ash);
+    --accent:   var(--flame);
+    --accent-2: var(--flame-deep);
+    --rule:     rgba(242, 191, 115, 0.16);
+    --glow:     rgba(242, 191, 115, 0.10);
+
+    --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
+             Georgia, "Times New Roman", serif;
+    --mono:  ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --measure: 34rem;
+    --step:    clamp(1rem, 0.6rem + 1.4vw, 1.5rem);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground:   #EFE7D8;
+      --surface:  #F7F1E4;
+      --raised:   #FBF6EC;
+      --ink:      #231A11;
+      --muted:    #5F5140;
+      --faint:    #857459;
+      --accent:   #9C5E17;
+      --accent-2: #7E4A10;
+      --rule:     rgba(35, 26, 17, 0.14);
+      --glow:     rgba(156, 94, 23, 0.07);
+    }
+  }
+  :root[data-theme="light"] {
+    --ground:   #EFE7D8;
+    --surface:  #F7F1E4;
+    --raised:   #FBF6EC;
+    --ink:      #231A11;
+    --muted:    #5F5140;
+    --faint:    #857459;
+    --accent:   #9C5E17;
+    --accent-2: #7E4A10;
+    --rule:     rgba(35, 26, 17, 0.14);
+    --glow:     rgba(156, 94, 23, 0.07);
+  }
+  :root[data-theme="dark"] {
+    --ground:   #0E0B08;
+    --surface:  #21180F;
+    --raised:   #191108;
+    --ink:      #EFE3D0;
+    --muted:    #A08E76;
+    --faint:    #7E7160;
+    --accent:   #F2BF73;
+    --accent-2: #D69242;
+    --rule:     rgba(242, 191, 115, 0.16);
+    --glow:     rgba(242, 191, 115, 0.10);
+  }
+
+  /* ── Ground ────────────────────────────────────────────────────────── */
+  .page {
+    background:
+      radial-gradient(120% 70% at 50% 0%, var(--glow) 0%, transparent 62%),
+      var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    min-height: 100vh;
+    padding: clamp(2rem, 6vw, 5rem) var(--step) 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .col { max-width: var(--measure); margin-inline: auto; }
+  .wide { max-width: 46rem; margin-inline: auto; }
+
+  /* ── Type ──────────────────────────────────────────────────────────── */
+  h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 600; }
+  h1 {
+    font-size: clamp(2.6rem, 1.6rem + 4vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.022em;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.95rem);
+    line-height: 1.16;
+    letter-spacing: -0.012em;
+  }
+  h3 {
+    font-size: 1.06rem;
+    letter-spacing: 0.005em;
+    color: var(--ink);
+  }
+  p { margin: 0; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  strong { font-weight: 660; color: var(--ink); }
+  em { font-style: italic; color: var(--ink); }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .lede { font-size: 1.16rem; color: var(--muted); line-height: 1.56; }
+  .aside { color: var(--faint); font-size: 0.94rem; line-height: 1.55; }
+
+  code, .ui {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    letter-spacing: -0.01em;
+  }
+  /* A control the host actually taps, named the way it is labelled. */
+  .ui {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.08em 0.42em;
+    white-space: nowrap;
+  }
+
+  /* ── Rhythm. Gaps, not margins. ────────────────────────────────────── */
+  .stack   { display: flex; flex-direction: column; gap: 1.15rem; }
+  .stack-s { display: flex; flex-direction: column; gap: 0.6rem; }
+  .stack-l { display: flex; flex-direction: column; gap: 2.1rem; }
+  section  { display: flex; flex-direction: column; gap: 1.15rem; }
+  .sections { display: flex; flex-direction: column; gap: clamp(3rem, 7vw, 4.6rem); }
+
+  /* ── Hero: the table itself ────────────────────────────────────────── */
+  .hero { display: flex; flex-direction: column; gap: 1.6rem; align-items: center;
+          text-align: center; padding-bottom: 1rem; }
+  .hero .lede { max-width: 30rem; }
+  .arc { width: min(100%, 30rem); height: auto; display: block; }
+
+  .seat-ring { fill: none; stroke: var(--rule); stroke-width: 1; }
+  .seat-face { fill: var(--ink); opacity: 0.82; }
+  .seat-bg   { fill: var(--surface); }
+  .lit .seat-ring { stroke: var(--accent); stroke-width: 2.5; }
+  .lit .seat-bg   { fill: color-mix(in srgb, var(--accent) 26%, var(--surface)); }
+
+  .medallion { opacity: 0; animation: rise 700ms ease-out forwards; }
+  .medallion:nth-of-type(1) { animation-delay: 120ms; }
+  .medallion:nth-of-type(2) { animation-delay: 220ms; }
+  .medallion:nth-of-type(3) { animation-delay: 320ms; }
+  .medallion:nth-of-type(4) { animation-delay: 420ms; }
+  .medallion:nth-of-type(5) { animation-delay: 520ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); }
+                    to   { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .medallion { opacity: 1; animation: none; }
+  }
+
+  /* ── Counts ────────────────────────────────────────────────────────── */
+  .counts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+    gap: 1px; background: var(--rule);
+    border: 1px solid var(--rule); border-radius: 8px; overflow: hidden;
+  }
+  .count { background: var(--surface); padding: 0.85rem 0.7rem; text-align: center; }
+  .count b {
+    display: block; font-size: 1.5rem; font-weight: 600; color: var(--accent);
+    font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  .count span {
+    font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  /* ── Steps: the evening in order ───────────────────────────────────── */
+  .step-head { display: flex; align-items: baseline; gap: 0.85rem; }
+  .step-num {
+    font-family: var(--mono); font-size: 0.82rem; color: var(--accent);
+    font-variant-numeric: tabular-nums; flex: none; padding-top: 0.15rem;
+  }
+
+  /* ── Cards ─────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.15rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.55rem;
+  }
+  .card.quiet { background: var(--raised); }
+
+  .rows { display: flex; flex-direction: column; gap: 0.75rem; }
+  .row {
+    display: grid; grid-template-columns: minmax(8.5rem, 12rem) 1fr;
+    gap: 0.4rem 1rem; align-items: baseline;
+  }
+  @media (max-width: 34rem) { .row { grid-template-columns: 1fr; gap: 0.2rem; } }
+  .row > :first-child { color: var(--accent); }
+  .row > :last-child  { color: var(--muted); font-size: 0.97rem; }
+
+  /* ── Callout for the thing that will actually bite ─────────────────── */
+  .note {
+    border-left: 2px solid var(--accent-2);
+    padding: 0.15rem 0 0.15rem 1rem;
+    color: var(--muted);
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+
+  /* ── Schools table ─────────────────────────────────────────────────── */
+  .scroller { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--rule); }
+  th {
+    font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--faint); font-weight: 600;
+  }
+  td.n { font-variant-numeric: tabular-nums; color: var(--accent); width: 3.5rem; }
+  td.who { color: var(--muted); }
+
+  hr { border: 0; border-top: 1px solid var(--rule); width: 100%; }
+
+  .end {
+    text-align: center; color: var(--faint); font-size: 0.9rem;
+    display: flex; flex-direction: column; gap: 0.35rem;
+  }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+</style>
+
+<div class="page">
+  <div class="wide sections">
+
+    <!-- ── Hero ─────────────────────────────────────────────────────── -->
+    <header class="hero">
+      <svg class="arc" viewBox="0 0 480 190" role="img"
+           aria-label="Five philosophers seated on an arc, one of them speaking, with the host below.">
+        <defs>
+          <radialGradient id="pool" cx="50%" cy="26%" r="62%">
+            <stop offset="0%"  stop-color="var(--accent)" stop-opacity="0.20"/>
+            <stop offset="60%" stop-color="var(--accent)" stop-opacity="0.05"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="480" height="190" fill="url(#pool)"/>
+
+        <!-- the near edge of the table, curving away -->
+        <path d="M 10 178 Q 240 108 470 178 L 470 190 L 10 190 Z"
+              fill="var(--surface)" opacity="0.85"/>
+
+        <!-- five chairs on the arc; the third is speaking -->
+        <g class="medallion" transform="translate(56,104)">
+          <circle class="seat-bg" r="25"/><circle class="seat-ring" r="25"/>
+          <path class="seat-face" d="M0-13a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 21c9 0 15 6 15 13H-15c0-7 6-13 15-13Z"/>
+          <path class="seat-face" d="M-9 4c0 8 4 13 9 13s9-5 9-13c0 12-4 17-9 17s-9-5-9-17Z" opacity="0.5"/>
+        </g>
+        <g class="medallion" transform="translate(148,80)">
+          <circle class="seat-bg" r="25"/><circle class="seat-ring" r="25"/>
+          <path class="seat-face" d="M0-13a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 21c9 0 15 6 15 13H-15c0-7 6-13 15-13Z"/>
+        </g>
+        <g class="medallion lit" transform="translate(240,70)">
+          <circle class="seat-bg" r="28"/><circle class="seat-ring" r="28"/>
+          <path class="seat-face" d="M0-15a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 23c10 0 17 7 17 15H-17c0-8 7-15 17-15Z"/>
+          <path class="seat-face" d="M-11 3c0 9 5 15 11 15s11-6 11-15c0 14-5 20-11 20s-11-6-11-20Z" opacity="0.55"/>
+        </g>
+        <g class="medallion" transform="translate(332,80)">
+          <circle class="seat-bg" r="25"/><circle class="seat-ring" r="25"/>
+          <path class="seat-face" d="M0-13a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 21c9 0 15 6 15 13H-15c0-7 6-13 15-13Z"/>
+        </g>
+        <g class="medallion" transform="translate(424,104)">
+          <circle class="seat-bg" r="25"/><circle class="seat-ring" r="25"/>
+          <path class="seat-face" d="M0-13a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 21c9 0 15 6 15 13H-15c0-7 6-13 15-13Z"/>
+          <path class="seat-face" d="M-10 -14 q10 -6 20 0 l-2 4 q-8 -4 -16 0Z" opacity="0.6"/>
+        </g>
+      </svg>
+
+      <div class="stack">
+        <p class="eyebrow">The manual</p>
+        <h1>Symposium</h1>
+        <p class="lede">
+          A table of philosophers who argue aloud, in their own rhythms, and may
+          cite only what they actually wrote. You are the host. This is how the
+          evening works.
+        </p>
+      </div>
+
+      <div class="counts" style="width:100%">
+        <div class="count"><b>75</b><span>seated</span></div>
+        <div class="count"><b>54</b><span>tables laid</span></div>
+        <div class="count"><b>26</b><span>texts held</span></div>
+        <div class="count"><b>10</b><span>schools</span></div>
+      </div>
+    </header>
+
+    <!-- ── The evening in order ─────────────────────────────────────── -->
+    <div class="col sections">
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">01</span>
+          <h2>Lay a table</h2>
+        </div>
+        <p>
+          The app opens with empty chairs, on purpose — nobody is chosen for you.
+          Three ways to fill them, and they are different offers rather than one
+          offer three times.
+        </p>
+        <div class="card">
+          <div class="rows">
+            <div class="row">
+              <span class="ui">tap a chair</span>
+              <span>Opens the roster, searchable by name, school, position or century.
+                    Type <em>stoic</em>, or <em>kier</em>, or <em>1600s</em>.</span>
+            </div>
+            <div class="row">
+              <span class="ui">lay a table</span>
+              <span>Fifty-four curated arguments. Each names the disagreement in a
+                    line, because that is the reason to pick one.</span>
+            </div>
+            <div class="row">
+              <span class="ui">seat me a table</span>
+              <span>A draw from all seventy-five. The second chair is always from a
+                    different tradition than the first, or the evening opens with
+                    two men agreeing.</span>
+            </div>
+          </div>
+        </div>
+        <p class="aside">
+          Two to five chairs. You can seat someone mid-conversation with
+          <span class="ui">draw up a chair</span> — he arrives into the argument
+          in progress and answers <em>that</em>, not a fresh question.
+        </p>
+      </section>
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">02</span>
+          <h2>Ask them something</h2>
+        </div>
+        <p>
+          Type it, or hold the microphone and speak it. Open the sentence with a
+          name and it goes to that man first — <em>“Marcus, does the fort hold?”</em>
+          — and the rest of the table decides for itself whether to join him.
+        </p>
+        <div class="card quiet">
+          <p><span class="ui">something to ask them</span> offers questions written
+             for the table as it is <em>actually</em> seated — matched to who is in
+             the chairs, not to which preset you last tapped.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">03</span>
+          <h2>What happens in a round</h2>
+        </div>
+        <p>
+          Everyone at the table is scored on how strongly your question touches
+          what they care about. The strongest reaction leads. <strong>The man most
+          opposed to him speaks second</strong> — friction is the design, not a
+          side effect. A third joins only with a genuinely different angle.
+        </p>
+        <p>
+          Each contribution arrives in two or three turns: a short opening that
+          states his answer, then the explanation. That is not a style choice —
+          <strong>every turn is spoken the moment it is written</strong>, so a
+          short opening reaches you while the rest is still being composed.
+        </p>
+        <div class="card">
+          <div class="rows">
+            <div class="row"><span>A name, spoken</span>
+              <span>The narrator says who has the floor — once, on a change of
+                    speaker. Nobody reintroduces the man still talking.</span></div>
+            <div class="row"><span>A stage direction</span>
+              <span><em>· laughs</em>, <em>· does not look up</em>. Manner, never
+                    mind: what a person in the room would see.</span></div>
+            <div class="row"><span>A citation</span>
+              <span>The work he is drawing on, tappable for the reference.</span></div>
+            <div class="row"><span>A turning mark</span>
+              <span>His voice is being fetched. Words arrive first; audio follows.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">04</span>
+          <h2>Move the conversation</h2>
+        </div>
+        <p>Four things you can ask for that a plain question will not produce.</p>
+        <div class="card">
+          <div class="rows">
+            <div class="row">
+              <span class="ui">hear one of them out</span>
+              <span>One man, the floor, no interruptions — his whole position in
+                    four to six movements, the first spoken while the rest are
+                    still being written.</span>
+            </div>
+            <div class="row">
+              <span class="ui">steelman the other case</span>
+              <span>One philosopher argues another's position in good faith, marked
+                    with a laurel, then earns exactly one aside in his own voice.
+                    The man whose view it is may judge it.</span>
+            </div>
+            <div class="row">
+              <span class="ui">a raised hand</span>
+              <span>Somebody who was addressed and has not answered. Tap his
+                    portrait and take it.</span>
+            </div>
+            <div class="row">
+              <span class="ui">excuse him</span>
+              <span>Remove a man mid-sitting without ending it. Swap one for
+                    another and the newcomer arrives at the end of the arc — the
+                    table is a sequence of arrivals, not a seating plan.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">05</span>
+          <h2>Take the floor</h2>
+        </div>
+        <p>
+          <strong>Tap your own portrait</strong> and you have asked to speak. The
+          man talking finishes his thought, nobody new begins, and the label under
+          you goes <em>waiting</em> → <em>your turn</em>. Holding the microphone
+          does the same thing and silences the room at once.
+        </p>
+        <div class="card">
+          <div class="rows">
+            <div class="row"><span>Pause</span>
+              <span>Holds the line where it is. Play resumes at the same word.</span></div>
+            <div class="row"><span>Interrupt</span>
+              <span>Abandons the line and everything queued behind it.</span></div>
+            <div class="row"><span>Mute</span>
+              <span>Makes the table inaudible. The argument continues in text.</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p>Three controls that stop sound and they are not the same. Pause keeps
+             your place. Interrupt does not. Mute does not stop anything — it stops
+             you hearing it.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">06</span>
+          <h2>Let them talk without you</h2>
+        </div>
+        <p>
+          For a sitting you cannot attend to — running, driving, cooking. Choose
+          <span class="ui">let them talk by themselves</span> <strong>before</strong>
+          you ask, then ask however you like. The table takes it from there and the
+          toast closes it. Nothing needs tapping again.
+        </p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th>Length</th><th>Exchanges</th><th>How they talk</th></tr></thead>
+            <tbody>
+              <tr><td class="n">10</td><td class="n">6</td><td class="who">the usual pace</td></tr>
+              <tr><td class="n">15</td><td class="n">9</td><td class="who">the usual pace</td></tr>
+              <tr><td class="n">20</td><td class="n">12</td><td class="who">room to develop</td></tr>
+              <tr><td class="n">30</td><td class="n">18</td><td class="who">room to develop</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="aside">
+          It quickens near the close, whatever it started as, so the last round is
+          the end of a movement rather than a sudden change of manner. And it
+          <strong>stops early when the argument runs dry</strong> — a twenty-minute
+          setting ending at eleven is the table having finished, not a fault.
+          <span class="ui">take the floor</span> ends it at the next round boundary.
+        </p>
+      </section>
+
+      <section>
+        <div class="step-head">
+          <span class="step-num">07</span>
+          <h2>End it, or keep it</h2>
+        </div>
+        <p>
+          <span class="ui">toast</span> closes the sitting. The table finishes what
+          it was already saying first — the button says <em>letting them
+          finish…</em> while it drains — and then raises a glass.
+        </p>
+        <div class="card">
+          <div class="rows">
+            <div class="row"><span class="ui">back to the table</span>
+              <span>Puts the glass down. The argument is intact; one more question
+                    is the most ordinary thing to think of after deciding you had
+                    finished.</span></div>
+            <div class="row"><span class="ui">keep the whole sitting</span>
+              <span>Writes both a readable transcript and an archive the app can
+                    reopen.</span></div>
+            <div class="row"><span class="ui">save the voices</span>
+              <span>An audio recording of the evening, your questions included.</span></div>
+            <div class="row"><span class="ui">kept sittings</span>
+              <span>Reopen an evening and hear it again, line by line, in the
+                    voices that said it.</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p><strong>A rough copy is written after every round</strong>, whether you
+             ask or not, as <code>Unfinished sitting.txt</code> in Files → On My
+             iPhone → Symposium. It survives a crash. It is the words, not the
+             audio, and the next evening overwrites it.</p>
+        </div>
+        <p class="aside">
+          A reopened sitting is for hearing again, not for carrying on. The
+          argument's own memory is not restored, and the screen says so rather
+          than letting you find out.
+        </p>
+      </section>
+    </div>
+
+    <hr class="col"/>
+
+    <!-- ── Reference ────────────────────────────────────────────────── -->
+    <div class="col sections">
+
+      <section>
+        <p class="eyebrow">What they remember</p>
+        <h2>They have met you before</h2>
+        <p>
+          Each sitting is recorded as a gist and read back at the next one, so a
+          philosopher can say <em>“when you were last here you doubted…”</em> —
+          and will not reuse an image or an opening he has already spent on you.
+        </p>
+        <div class="note">
+          <p>He remembers <strong>only the evenings he was actually at</strong>.
+             A man recalling a conversation he was absent from is inventing one,
+             which is the same fault as an invented citation and harder to catch,
+             because you may half-remember it too and agree.</p>
+        </div>
+        <p class="aside">
+          A steelman is recorded as a case <em>put</em>, never as a view held. He
+          argued it because you asked.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow">The rules they cannot break</p>
+        <h2>Why the citations can be trusted</h2>
+        <p>
+          Every integrity rule here is enforced in code, not merely requested in a
+          prompt. A turn that breaks one is dropped before it can be spoken.
+        </p>
+        <div class="card">
+          <div class="rows">
+            <div class="row"><span>Own library only</span>
+              <span>A philosopher may name his own works, by exact title. Nothing
+                    invented, nothing borrowed from the man beside him.</span></div>
+            <div class="row"><span>Exclusions honoured</span>
+              <span>Books he did not write, could not have written, or that were
+                    assembled after his death are refused — with the reason
+                    attached.</span></div>
+            <div class="row"><span>Quotation verified</span>
+              <span>Exact words are permitted only where the app holds the text and
+                    can check them. Everything else is paraphrase.</span></div>
+            <div class="row"><span>Spoken work, never quoted</span>
+              <span>A lecture or interview may be cited and never quoted verbatim.</span></div>
+            <div class="row"><span>Manner, not mind</span>
+              <span>Stage directions describe what a person in the room would
+                    observe. Never what a man is feeling.</span></div>
+          </div>
+        </div>
+        <p class="aside">
+          Fourteen philosophers can be quoted exactly today, because their texts
+          are bundled: Marcus Aurelius, Plato, Aristotle, Hobbes, Locke, Hume,
+          Descartes, Spinoza, Nietzsche, Darwin, Douglass, James, Tolstoy and
+          Dostoevsky. For the rest, quotation is refused rather than guessed.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow">The roster</p>
+        <h2>Seventy-five, in ten schools</h2>
+        <p class="aside">
+          Grouped by where a man stands rather than when he lived. The groups exist
+          to make a menu navigable, not to settle historiography.
+        </p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th>School</th><th>Seats</th><th>Who you will find</th></tr></thead>
+            <tbody>
+              <tr><td>The age of reason</td><td class="n">10</td><td class="who">Descartes, Spinoza, Hobbes, Locke, Hume, Kant, Rousseau, Elisabeth, Zera Yacob, Leibniz</td></tr>
+              <tr><td>Mind and matter</td><td class="n">10</td><td class="who">Wittgenstein, Kastrup, Penrose, Dennett, Churchland, Anscombe, Hoffman, Gallimore, Woollacott, Chomsky</td></tr>
+              <tr><td>The sciences</td><td class="n">10</td><td class="who">Darwin, Schrödinger, Turing, von Neumann, Bohm, Levin, Margulis, Faggin, Shannon, Wheeler</td></tr>
+              <tr><td>Power and refusal</td><td class="n">9</td><td class="who">La Boétie, Spooner, Douglass, Arendt, Tolstoy, Larken Rose, Foucault, Rothbard, Ellul</td></tr>
+              <tr><td>Existence and the absurd</td><td class="n">8</td><td class="who">Kierkegaard, Sartre, Camus, Beauvoir, Frankl, Husserl, Heidegger, Dostoevsky</td></tr>
+              <tr><td>The ancients</td><td class="n">6</td><td class="who">Socrates, Plato, Aristotle, Diogenes, Marcus Aurelius, Plotinus</td></tr>
+              <tr><td>The Eastern schools</td><td class="n">6</td><td class="who">Lao Tzu, Confucius, Mencius, the Buddha, Abhinavagupta, Vivekananda</td></tr>
+              <tr><td>Faith and the mystics</td><td class="n">6</td><td class="who">Aquinas, Avicenna, Teresa de Ávila, John of the Cross, Rumi, Weil</td></tr>
+              <tr><td>After Kant</td><td class="n">5</td><td class="who">Hegel, Schopenhauer, Marx, Nietzsche, Derrida</td></tr>
+              <tr><td>How we know</td><td class="n">5</td><td class="who">Popper, Kuhn, James, Comte, Russell</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="aside">
+          Ten of them are alive. Those carry a standing disclosure: a living person
+          can be got wrong in public, by name, and be around to see it — so the
+          screen says plainly that this is a construction from published work and
+          that he has not been consulted.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow">Two Simones, three Thomases</p>
+        <h2>Calling a man by name</h2>
+        <p>
+          Where a given name is shared, everyone who shares it takes a surname
+          initial — <strong>Karl M</strong> and <strong>Karl P</strong>,
+          <strong>Simone W</strong> and <strong>Simone B</strong>,
+          <strong>Thomas H</strong>, <strong>Thomas A</strong> and
+          <strong>Thomas K</strong>.
+        </p>
+        <p class="aside">
+          The bare name reaches nobody, deliberately. Guessing between two men is
+          worse than asking again, and you would hear the wrong one answer with no
+          sign that anything had gone wrong.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow">Voices</p>
+        <h2>Who sounds like whom</h2>
+        <p>
+          The phone's own voices work with no setup and no cost. Cloud voices are
+          better and are billed per character; the server holds the key and enforces
+          a daily budget, so the system voices take over rather than the table going
+          quiet.
+        </p>
+        <div class="card">
+          <div class="rows">
+            <div class="row"><span class="ui">who is speaking</span>
+              <span>Assign a voice per chair, set how they are pronounced, and tell
+                    them what to call you.</span></div>
+            <div class="row"><span class="ui">cloud voices</span>
+              <span>Search the whole roster, see who still lacks a voice, and fill
+                    the rest without overwriting the ones you chose.</span></div>
+          </div>
+        </div>
+        <p class="aside">
+          Give your name and they will use it — sparingly, once or twice an evening,
+          at the moment a man turns to you. A name in every turn is the register of
+          a hold queue and would undo the thing it was added for.
+        </p>
+      </section>
+
+      <section>
+        <p class="eyebrow">When something goes wrong</p>
+        <h2>What the messages mean</h2>
+        <div class="card">
+          <div class="rows">
+            <div class="row"><span>Overloaded</span>
+              <span>The service is busy. It is retried for you before you ever see
+                    this; when you do, wait a few seconds and use the button
+                    underneath.</span></div>
+            <div class="row"><span class="ui">let them finish</span>
+              <span>The connection dropped part-way. What you heard stands; this
+                    asks for the rest.</span></div>
+            <div class="row"><span class="ui">ask them again</span>
+              <span>The fault landed before anybody spoke. Re-poses your question
+                    unchanged.</span></div>
+            <div class="row"><span>System voices took over</span>
+              <span>A cloud voice failed once. The words are unchanged. It clears
+                    itself, and you can tap it away.</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p><strong>You never have to leave a sitting to recover from a fault.</strong>
+             Every transient failure offers the way onward directly beneath it.</p>
+        </div>
+      </section>
+
+      <section>
+        <p class="eyebrow">One thing to know</p>
+        <h2>The roster ships with the app</h2>
+        <p>
+          Philosophers, curated tables and bundled texts are compiled into the app
+          itself. There is no database and nothing downloads in the background.
+          <strong>Anyone added since your last install is not there until you build
+          again</strong> — which is worth remembering the day a search comes back
+          empty for a man you know exists.
+        </p>
+      </section>
+
+      <div class="end">
+        <hr/>
+        <p>Symposium · a spoken table</p>
+        <p>They cite only what they wrote. Where the words cannot be checked,
+           they paraphrase and say so.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
