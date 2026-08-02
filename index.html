@@ -373,10 +373,10 @@
       <div class="counts" style="width:100%">
         <div class="count"><b>150</b><span>seated</span></div>
         <div class="count"><b>54</b><span>tables laid</span></div>
-        <div class="count"><b>62</b><span>texts held</span></div>
+        <div class="count"><b>121</b><span>texts held</span></div>
         <div class="count"><b>12</b><span>schools</span></div>
         <div class="count"><b>39</b><span>still alive</span></div>
-        <div class="count"><b>26</b><span>quotable</span></div>
+        <div class="count"><b>35</b><span>quotable</span></div>
       </div>
     </header>
 
@@ -397,8 +397,26 @@
           <div class="rows">
             <div class="row">
               <span class="ui">tap a chair</span>
-              <span>Opens the roster, searchable by name, school, position or century.
-                    Type <em>stoic</em>, or <em>kier</em>, or <em>1600s</em>.</span>
+              <span>Opens the roster. Every man shows <em>what he will do to your
+                    question</em> under his name, which is the thing you are actually
+                    choosing between.</span>
+            </div>
+            <div class="row">
+              <span class="ui">search</span>
+              <span>Reaches names, schools and centuries — and <strong>what each man
+                    argues</strong>. Type <em>free will</em> and you get Sapolsky,
+                    Spinoza, Harris and Strawson; type <em>stoic</em>, or
+                    <em>kier</em>, or <em>1600s</em>, and it still works the old
+                    way.</span>
+            </div>
+            <div class="row">
+              <span class="ui">seat an opponent</span>
+              <span>Pick a man already seated and the app offers people known to
+                    argue with him, saying what the disagreement is. It does not
+                    compute this — it reads it out of the curated tables, where
+                    somebody already wrote down what the fight was about. Where
+                    there is no record it says so and offers a draw from another
+                    school.</span>
             </div>
             <div class="row">
               <span class="ui">lay a table</span>
@@ -884,12 +902,10 @@
           </div>
         </div>
         <p class="aside">
-          Twenty-six philosophers can be quoted exactly today, across sixty-two
-          bundled texts: Plato, Aristotle, Epictetus, Marcus Aurelius, Augustine,
-          Confucius, Bacon, Hobbes, Descartes, Spinoza, Locke, Leibniz, Berkeley,
-          Hume, Rousseau, Kant, Schopenhauer, Mill, Marx, Nietzsche, Darwin,
-          Douglass, James, Russell, Tolstoy and Dostoevsky. For everyone else,
-          quotation is refused rather than guessed.
+          Thirty-five philosophers can be quoted exactly today, across 121
+          bundled texts: Aristotle, Augustine, Bacon, Berkeley, Comte, Confucius, Darwin, Descartes, Diogenes, Dostoevsky, Douglass, Einstein, Epictetus, Hobbes, Hume, James, Julian, Kant, Leibniz, Locke, Marcus Aurelius, Marx, Mill, Nietzsche, Plato, Pythagoras, Rousseau, Russell, Schopenhauer, Seneca, Socrates, Spinoza, Spooner, Tolstoy and Whitehead. For
+          everyone else, quotation is refused rather than guessed — and you can
+          change that yourself for any of them, by adding a source and fetching it.
         </p>
       </section>
 
@@ -912,13 +928,20 @@
         </p>
         <div class="card">
           <div class="rows">
-            <div class="row"><span>He does not read it</span>
-              <span><strong>This is the one to know.</strong> The app sends him the
-                    title, the address and your note — it never fetches the page and
-                    holds none of the text. So he can name the source and ask you
-                    what is in it, and he cannot describe its contents, agree with
-                    it, or quote a word. <em>Your note is the only thing that
-                    reaches him about what it actually says.</em></span></div>
+            <div class="row"><span>Title only, at first</span>
+              <span>Until you fetch it, the app sends him the title, the address and
+                    your note — nothing else. He can name the source and ask you
+                    what is in it, and he cannot describe its contents or quote a
+                    word. Your note is the only thing that reaches him about what it
+                    says.</span></div>
+            <div class="row"><span class="ui">fetch the text</span>
+              <span><strong>Then he has read it.</strong> The app downloads the page,
+                    pulls the words out and keeps them on this iPhone. From that
+                    moment he can discuss what is in it, disagree with it, and
+                    <em>quote it exactly</em> — because every quotation is checked
+                    against the stored text word for word, which is the same rule
+                    the bundled books live under rather than an exception to
+                    it.</span></div>
             <div class="row"><span>A link is required</span>
               <span>Nothing is added without one. A claim nobody can follow is
                     unfalsifiable in practice, which is worse than merely
@@ -937,6 +960,20 @@
                     and is told he may.</span></div>
           </div>
         </div>
+        <div class="note">
+          <p><strong>What fetching can read.</strong> Plain text, ordinary web pages,
+             and PDFs that have a text layer. A scanned PDF with no text in it, or a
+             page that builds itself entirely in JavaScript, will come back empty and
+             say so. Nothing is stored silently: if the fetch fails you are told
+             which way it failed, because a source you believe was captured and was
+             not is the worst outcome here — you would go on expecting him to have
+             read something nobody downloaded.</p>
+        </div>
+        <p class="aside">
+          Video transcripts work well, and are worth knowing about: paste the link to
+          a transcript rather than to the video, and the talk becomes as quotable as
+          a book.
+        </p>
         <p class="aside">
           This is the one place the closed library opens, and it is worth being
           plain about the trade. The researched library is a promise the app makes:
